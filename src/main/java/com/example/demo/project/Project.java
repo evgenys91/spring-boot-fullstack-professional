@@ -1,4 +1,4 @@
-package com.example.demo.group;
+package com.example.demo.project;
 
 import com.example.demo.student.Student;
 import lombok.*;
@@ -13,22 +13,28 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "students_group")
-public class Group {
+@Table(name = "project")
+public class Project {
 
     @Id
-    @GeneratedValue
+    @SequenceGenerator(
+            name = "project_sequence",
+            sequenceName = "project_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            generator = "project_sequence",
+            strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @NotBlank
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String title;
 
     @ManyToOne(cascade=CascadeType.PERSIST)
     @JoinColumn(name="student_id")
     private Student student;
 
-    public Group(String title) {
+    public Project(String title) {
         this.title = title;
     }
 }

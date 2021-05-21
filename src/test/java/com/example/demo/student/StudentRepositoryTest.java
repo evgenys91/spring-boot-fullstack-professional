@@ -11,40 +11,20 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 class StudentRepositoryTest {
 
     @Autowired
-    private StudentRepository underTest;
+    private StudentRepository studentRepository;
 
     @AfterEach
     void tearDown() {
-        underTest.deleteAll();
+        studentRepository.deleteAll();
     }
 
     @Test
     void itShouldCheckWhenStudentEmailExists() {
-        // given
-        String email = "jamila@gmail.com";
-        Student student = new Student(
-                "Jamila",
-                email,
-                Gender.FEMALE
-        );
-        underTest.save(student);
-
-        // when
-        boolean expected = underTest.selectExistsEmail(email);
-
-        // then
-        assertThat(expected).isTrue();
+        //TODO implement test
     }
 
     @Test
     void itShouldCheckWhenStudentEmailDoesNotExists() {
-        // given
-        String email = "jamila@gmail.com";
-
-        // when
-        boolean expected = underTest.selectExistsEmail(email);
-
-        // then
-        assertThat(expected).isFalse();
+        //TODO implement test
     }
 }

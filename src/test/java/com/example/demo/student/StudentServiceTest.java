@@ -21,92 +21,35 @@ import static org.mockito.Mockito.verify;
 class StudentServiceTest {
 
     @Mock private StudentRepository studentRepository;
-    private StudentService underTest;
+    private StudentService studentService;
 
     @BeforeEach
     void setUp() {
-        underTest = new StudentService(studentRepository);
+        studentService = new StudentService(studentRepository);
     }
 
     @Test
     void canGetAllStudents() {
-        // when
-        underTest.getAllStudents();
-        // then
-        verify(studentRepository).findAll();
+        //TODO implement test
     }
 
     @Test
     void canAddStudent() {
-        // given
-        Student student = new Student(
-                "Jamila",
-                "jamila@gmail.com",
-                Gender.FEMALE
-        );
-
-        // when
-        underTest.addStudent(student);
-
-        // then
-        ArgumentCaptor<Student> studentArgumentCaptor =
-                ArgumentCaptor.forClass(Student.class);
-
-        verify(studentRepository)
-                .save(studentArgumentCaptor.capture());
-
-        Student capturedStudent = studentArgumentCaptor.getValue();
-
-        assertThat(capturedStudent).isEqualTo(student);
+        //TODO implement test
     }
 
     @Test
     void willThrowWhenEmailIsTaken() {
-        // given
-        Student student = new Student(
-                "Jamila",
-                "jamila@gmail.com",
-                Gender.FEMALE
-        );
-
-        given(studentRepository.selectExistsEmail(anyString()))
-                .willReturn(true);
-
-        // when
-        // then
-        assertThatThrownBy(() -> underTest.addStudent(student))
-                .isInstanceOf(BadRequestException.class)
-                .hasMessageContaining("Email " + student.getEmail() + " taken");
-
-        verify(studentRepository, never()).save(any());
-
+        //TODO implement test
     }
 
     @Test
     void canDeleteStudent() {
-        // given
-        long id = 10;
-        given(studentRepository.existsById(id))
-                .willReturn(true);
-        // when
-        underTest.deleteStudent(id);
-
-        // then
-        verify(studentRepository).deleteById(id);
+        //TODO implement test
     }
 
     @Test
     void willThrowWhenDeleteStudentNotFound() {
-        // given
-        long id = 10;
-        given(studentRepository.existsById(id))
-                .willReturn(false);
-        // when
-        // then
-        assertThatThrownBy(() -> underTest.deleteStudent(id))
-                .isInstanceOf(StudentNotFoundException.class)
-                .hasMessageContaining("Student with id " + id + " does not exists");
-
-        verify(studentRepository, never()).deleteById(any());
+        //TODO implement test
     }
 }

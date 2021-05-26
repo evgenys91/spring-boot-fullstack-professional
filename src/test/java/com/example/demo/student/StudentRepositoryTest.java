@@ -1,13 +1,11 @@
 package com.example.demo.student;
 
-import com.example.demo.project.Project;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.verify;
 
 @DataJpaTest
 class StudentRepositoryTest {
@@ -22,22 +20,24 @@ class StudentRepositoryTest {
 
     @Test
     void itShouldCheckWhenStudentEmailExists() {
-        //TODO fix test
         String email = "mail@test.com";
-        Student student = new Student();
-        student.setEmail(EMAIL);
-        studentRepository.save(new Student());
+        Student student1 = new Student();
+        student1.setEmail(email);
+        student1.setName("TEST");
+        student1.setGender(Gender.OTHER);
         assertThat(studentRepository.selectExistsEmail(email)).isFalse();
+        studentRepository.save(student1);
+        assertThat(studentRepository.selectExistsEmail(email)).isTrue();
     }
 
     @Test
     void itShouldCheckWhenStudentEmailDoesNotExists() {
-        //TODO fix test
         String email = "mail@test.com";
         Student student = new Student();
-        student.setEmail(EMAIL);
+        student.setEmail(email);
+        student.setName("TEST");
+        student.setGender(Gender.OTHER);
         assertThat(studentRepository.selectExistsEmail(email)).isFalse();
-        verify(studentRepository).selectExistsEmail(email);
     }
 
 }

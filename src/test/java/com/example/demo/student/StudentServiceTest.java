@@ -16,6 +16,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -25,7 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
 
-    @Mock private StudentRepository repository;
+    @Mock
+    private StudentRepository repository;
     private StudentService studentService;
 
     @BeforeEach
@@ -39,18 +41,19 @@ class StudentServiceTest {
         List<Student> students = new ArrayList<>();
         students.add(new Student());
         when(repository.findAll()).thenReturn(students);
-        assertEquals(students, service.getAllStudent());
+        assertEquals(students, studentService.getAllStudents());
     }
 
     @Test
     public void testAddStudent() {
         //TODO fix test
         Student student = new Student();
-        student.setEmail(EMAIL);
-        when(repository.selectExistsStudent(EMAIL)).thenReturn(Boolean.TRUE);
+        String email = "mail@test.com";
+        student.setEmail(email);
+        when(repository.selectExistsEmail(email)).thenReturn(Boolean.FALSE);
         studentService.addStudent(student);
         ArgumentCaptor<Student> studentArgumentCaptor = ArgumentCaptor.forClass(Student.class);
-        verify(repository).save(studentArgumentCaptor.capture());
+        verify(repository, times(1)).save(studentArgumentCaptor.capture());
         Student capturedStudent = studentArgumentCaptor.getValue();
         assertThat(capturedStudent).isEqualTo(student);
     }
@@ -59,9 +62,10 @@ class StudentServiceTest {
     void willThrowWhenTitleIsTaken() {
         //TODO fix test
         Student student = new Student();
-        student.setEmail(EMAIL);
-        given(repository.selectExistsStudent(anyString())).willReturn(Boolean.TRUE);
-        assertThatThrownBy(() -> studentService.addStudent(new Student())).isInstanceOf(BadRequestException.class);
+        String email = "mail@test.com";
+        student.setEmail(email);
+        when(repository.selectExistsEmail(anyString())).thenReturn(Boolean.TRUE);
+        assertThatThrownBy(() -> studentService.addStudent(student)).isInstanceOf(BadRequestException.class);
         verify(repository, never()).save(any());
     }
 
@@ -70,7 +74,7 @@ class StudentServiceTest {
         //TODO fix test
         long id = 10;
         given(repository.existsById(id)).willReturn(false);
-        assertThatThrownBy(() -> studentService.deleteStudent(10L)).isInstanceOf(StudentNotFoundException.class);
+        assertThatThrownBy(() -> studentService.deleteStudent(id)).isInstanceOf(StudentNotFoundException.class);
         verify(repository, never()).deleteById(any());
     }
 
@@ -79,8 +83,8 @@ class StudentServiceTest {
         //TODO fix test
         long id = 10;
         given(repository.existsById(id)).willReturn(true);
-        service.deleteStudent(1L);
-        verify(repository).deleteById(id);
+        studentService.deleteStudent(id);
+        verify(repository, times(1)).deleteById(id);
     }
 
 

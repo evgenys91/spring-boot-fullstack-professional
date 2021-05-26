@@ -7,13 +7,15 @@ import static org.mockito.Mockito.verify;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@ExtendWith(MockitoExtension.class)
+@DataJpaTest
 class ProjectRepositoryTest {
 
-    @Mock
+    @Autowired
     private ProjectRepository projectRepository;
 
     @AfterEach
@@ -23,12 +25,18 @@ class ProjectRepositoryTest {
 
     @Test
     void itShouldCheckWhenProjectTitleExists() {
-        //TODO implement test
+        Project project = new Project();
+        String title = "title";
+        project.setTitle(title);
+        assertThat(projectRepository.selectExistsProject(title)).isFalse();
+        projectRepository.save(project);
+        assertThat(projectRepository.selectExistsProject(title)).isTrue();
     }
 
     @Test
     void itShouldCheckWhenProjectTitleDoesNotExists() {
-        //TODO implement test
+        String title = "title";
+        assertThat(projectRepository.selectExistsProject(title)).isFalse();
     }
 
 }

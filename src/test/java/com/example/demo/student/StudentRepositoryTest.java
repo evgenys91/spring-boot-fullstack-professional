@@ -21,22 +21,18 @@ class StudentRepositoryTest {
     @Test
     void itShouldCheckWhenStudentEmailExists() {
         String email = "mail@test.com";
-        Student student1 = new Student();
-        student1.setEmail(email);
-        student1.setName("TEST");
-        student1.setGender(Gender.OTHER);
+        Student student = new Student();
+        student.setEmail(email);
+        student.setName("TEST");
+        student.setGender(Gender.OTHER);
         assertThat(studentRepository.selectExistsEmail(email)).isFalse();
-        studentRepository.save(student1);
+        studentRepository.save(student);
         assertThat(studentRepository.selectExistsEmail(email)).isTrue();
     }
 
     @Test
     void itShouldCheckWhenStudentEmailDoesNotExists() {
         String email = "mail@test.com";
-        Student student = new Student();
-        student.setEmail(email);
-        student.setName("TEST");
-        student.setGender(Gender.OTHER);
         assertThat(studentRepository.selectExistsEmail(email)).isFalse();
     }
 
